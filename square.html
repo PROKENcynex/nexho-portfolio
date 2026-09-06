@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Portfolio - Kenxeo</title>
 
+  <!-- AOS Scroll Animation Library CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+
   <style>
     :root{
       --cell: 48px;
@@ -50,6 +53,7 @@
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
     }
 
+    /* Keep animations active only on larger displays */
     @media (min-width: 769px) {
       body {
         animation: grid-drift var(--speed) linear infinite;
@@ -66,6 +70,12 @@
       }
     }
 
+    /* Safety rule: ensure contents are never hidden permanently by AOS */
+    [data-aos] {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
     /* ========================================
        LOADING SCREEN
     ======================================== */
@@ -78,14 +88,13 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      transition: opacity 0.4s ease, visibility 0.4s ease;
-      will-change: opacity, visibility;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
     }
 
     #loader.hide {
-      opacity: 0 !important;
-      visibility: hidden !important;
-      pointer-events: none !important;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
     }
 
     .loader-title {
@@ -169,6 +178,7 @@
       max-width: 1200px;
     }
 
+    /* RELIABLE CARD STYLING */
     .card {
       border: 1px solid var(--card-border);
       background: var(--card-bg);
@@ -176,7 +186,6 @@
       border-radius: 20px;
       box-sizing: border-box;
       transition: transform 0.25s ease, border-color 0.25s ease;
-      will-change: transform;
     }
 
     @media (hover: hover) {
@@ -242,6 +251,7 @@
       .grid{ grid-template-columns: repeat(3, 1fr); }
     }
 
+    /* FOOTER */
     footer {
       background: #000;
       color: #fff;
@@ -378,60 +388,45 @@
   <script>
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&@$";
 
-    // Hardware-driven scramble animation (never blocks CPU execution)
-    function scrambleText(element, finalText, duration = 600) {
-      if(!element) return;
-      let startTime = null;
+    function scrambleText(element, finalText, totalDurationMs = 500) {
+      let iteration = 0;
+      const intervalTime = 30;
+      const totalSteps = totalDurationMs / intervalTime;
+      const increment = finalText.length / totalSteps;
 
-      function update(currentTime) {
-        if (!startTime) startTime = currentTime;
-        const progress = Math.min((currentTime - startTime) / duration, 1);
-        const revealedChars = Math.floor(progress * finalText.length);
-
+      const interval = setInterval(() => {
         element.innerText = finalText
           .split("")
-          .map((letter, i) => {
+          .map((letter, index) => {
             if (letter === " ") return " ";
-            if (i < revealedChars) return finalText[i];
+            if (index < iteration) return finalText[index];
             return characters[Math.floor(Math.random() * characters.length)];
           })
           .join("");
 
-        if (progress < 1) {
-          requestAnimationFrame(update);
-        } else {
+        iteration += increment;
+
+        if (iteration >= finalText.length) {
+          clearInterval(interval);
           element.innerText = finalText;
         }
-      }
-      requestAnimationFrame(update);
+      }, intervalTime);
     }
 
-    // Reliable loader dismisser
-    function hideLoader() {
-      const loader = document.getElementById("loader");
-      if (loader && !loader.classList.contains("hide")) {
-        loader.classList.add("hide");
-        
-        // Trigger remaining text scramble animations smoothly
-        document.querySelectorAll(".scramble-on-load").forEach(el => {
-          scrambleText(el, el.innerText, 600);
-        });
-      }
-    }
-
-    // Scramble initial loader screen text
-    document.addEventListener("DOMContentLoaded", () => {
+    window.addEventListener("DOMContentLoaded", () => {
       const loaderText = document.getElementById("loaderText");
-      if (loaderText) scrambleText(loaderText, "KENXEO", 600);
-    });
+      const loader = document.getElementById("loader");
 
-    // Dismiss loader when DOM is ready (Max delay fallback: 800ms)
-    window.addEventListener("load", () => {
-      setTimeout(hideLoader, 600);
-    });
+      scrambleText(loaderText, "KENXEO", 500);
 
-    // Guaranteed safety timeout (ensures screen dismisses even if assets hang)
-    setTimeout(hideLoader, 800);
+      setTimeout(() => {
+        loader.classList.add("hide");
+
+        document.querySelectorAll(".scramble-on-load").forEach(el => {
+          scrambleText(el, el.innerText, 500);
+        });
+      }, 700);
+    });
 
     function toggleTheme(){
       document.body.classList.toggle('light');
