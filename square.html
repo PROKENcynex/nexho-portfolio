@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Portfolio - Kenxeo</title>
 
-  <!-- AOS Scroll Animation Library CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
-
   <style>
     :root{
       --cell: 48px;
@@ -53,7 +50,6 @@
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
     }
 
-    /* Keep animations active only on larger displays */
     @media (min-width: 769px) {
       body {
         animation: grid-drift var(--speed) linear infinite;
@@ -70,12 +66,6 @@
       }
     }
 
-    /* Safety rule: ensure contents are never hidden permanently by AOS */
-    [data-aos] {
-      opacity: 1 !important;
-      transform: none !important;
-    }
-
     /* ========================================
        LOADING SCREEN
     ======================================== */
@@ -86,6 +76,369 @@
       z-index: 9999;
       display: flex;
       flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+      will-change: opacity, visibility;
+    }
+
+    #loader.hide {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    .loader-title {
+      font-size: clamp(2rem, 6vw, 4.5rem);
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-align: center;
+      color: #fff;
+      font-family: monospace;
+    }
+
+    .loader-subtitle {
+      margin-top: 15px;
+      color: #00f0ff;
+      font-size: 12px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+    }
+
+    .loader-line {
+      width: min(250px, 60vw);
+      height: 2px;
+      background: rgba(255,255,255,0.1);
+      margin-top: 25px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .loader-progress {
+      width: 0%;
+      height: 100%;
+      background: #00f0ff;
+      animation: loadingBar 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    @keyframes loadingBar {
+      to { width: 100%; }
+    }
+
+    /* HEADER & MAIN STYLES */
+    header{
+      text-align: center;
+      padding: 2rem 1rem 1rem;
+    }
+
+    header h1{
+      font-size: 2.2rem;
+      margin: 0;
+      font-family: monospace;
+    }
+    
+    header h1 .highlight{
+      color: #00f0ff;
+    }
+
+    .theme-toggle{
+      margin-top: 1rem;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 8px;
+      background: #00f0ff;
+      color: #000;
+      font-weight: bold;
+    }
+
+    .wrap{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+
+    .grid{
+      display: grid;
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .card {
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 20px;
+      box-sizing: border-box;
+      transition: transform 0.25s ease, border-color 0.25s ease;
+      will-change: transform;
+    }
+
+    @media (hover: hover) {
+      .card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(0, 240, 255, 0.6);
+      }
+    }
+
+    .card h2, .card h3{
+      margin-top: 0;
+      font-size: 1.5rem;
+      margin-bottom: .5rem;
+      font-family: monospace;
+    }
+
+    .card p, .card ul{
+      opacity: .85;
+      line-height: 1.6;
+      margin: 0 0 1rem;
+    }
+
+    .sub-grid {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .sub-card {
+      border: 1px solid var(--card-border);
+      background: rgba(255,255,255,0.03);
+      padding: 1rem;
+      border-radius: 12px;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-top: 1em;
+    }
+
+    .contact-links a {
+      display: block;
+      width: 100%;
+      text-align: center;
+      color: var(--text-color);
+      background: var(--bg);
+      border: 1.5px solid var(--text-color);
+      border-radius: 8px;
+      padding: 0.7em 1.2em;
+      text-decoration: none;
+      font-weight: 500;
+      box-sizing: border-box;
+    }
+
+    @media (min-width: 768px){
+      .grid{ grid-template-columns: repeat(2, 1fr); }
+      .sub-grid{ grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (min-width: 1024px){
+      .grid{ grid-template-columns: repeat(3, 1fr); }
+    }
+
+    footer {
+      background: #000;
+      color: #fff;
+      padding: 20px 0 10px;
+      margin-top: 40px;
+      border-top: 1px solid #333;
+      font-size: 0.95rem;
+    }
+
+    .footer-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      max-width: 1100px;
+      margin: auto;
+      padding: 0 20px;
+    }
+
+    .footer-left h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-family: monospace;
+    }
+
+    .footer-right a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      margin-top: 15px;
+      opacity: 0.6;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOADING SCREEN -->
+  <div id="loader">
+    <div class="loader-title" id="loaderText">KENXEO</div>
+    <div class="loader-subtitle">Loading System</div>
+    <div class="loader-line">
+      <div class="loader-progress"></div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <h1>
+      <span class="scramble-on-load">PORTFOLIO</span> 
+      <span class="highlight scramble-on-load">2026</span>
+    </h1>
+    <h1>
+      <span class="scramble-on-load" style="color: rgb(255, 64, 64)">Kenxeo.</span>
+    </h1>
+    
+    <button class="theme-toggle" onclick="toggleTheme()">Black~White Mode</button>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="wrap">
+    <div class="grid">
+      <!-- ABOUT ME CARD -->
+      <section class="card">
+        <h2 class="scramble-on-load">About Me :</h2>
+        <p>Hi, I’m <b class="scramble-on-load" style="font-family: monospace;">Muhammad Ashik</b> — also known as <b>Kenxeo</b>. I’m a passionate digital creator from India, driven by a love for coding, creative design, and storytelling through visuals. Whether it's crafting sleek graphics, editing content, or developing innovative digital ideas, I bring imagination and precision to everything I create.</p>
+      </section>
+
+      <!-- SKILLS CARD -->
+      <section class="card" id="skills">
+        <h2 class="scramble-on-load">Skills</h2>
+        <div class="sub-grid">
+          <div class="sub-card">
+            <h3 class="scramble-on-load">Education</h3>
+            <p><b>2024–Present</b><br>Computer Science Student<br>India</p>
+          </div>
+          <div class="sub-card">
+            <h3 class="scramble-on-load">tech-languages</h3>
+            <ul>
+              <li>python</li>
+              <li>javascript</li>
+              <li>html</li>
+              <li>css</li>
+              <li>c++</li>
+            </ul>
+          </div>
+          <div class="sub-card">
+            <h3 class="scramble-on-load">Software Skills</h3>
+            <ul><li>GitHub</li><li>VS Code</li><li>GIMP</li><li>Capcut</li><li>Pixellab</li><li>Inshot</li></ul>
+          </div>
+          <div class="sub-card">
+            <h3 class="scramble-on-load">Core Skills</h3>
+            <p>Web Development · Graphic Design · Coding · Creative Storytelling · Editing</p>
+          </div>
+          <div class="sub-card">
+            <h3 class="scramble-on-load">Languages</h3>
+            <p>English · Tamil · Malayalam</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT CARD -->
+      <div class="card">
+        <h2 class="scramble-on-load">Contact 🔗</h2>
+        <p style="margin-bottom:1em; opacity:0.8;">Let's connect! Reach out via your preferred platform:</p>
+        <div class="contact-links">
+          <a href="mailto:prokencynex@gmail.com" target="_blank"> Email</a>
+          <a href="https://wa.me/9655266162" target="_blank"> WhatsApp</a>
+          <a href="https://t.me/ken_xeo" target="_blank"> Telegram</a>
+          <a href="https://www.instagram.com/ken.xeo" target="_blank"> Instagram</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-left">
+        <h3 class="scramble-on-load">Kenxeo</h3>
+      </div>
+      <div class="footer-right">
+        <a href="mailto:prokencynex@gmail.com">prokencynex@gmail.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 kenxeo · All Rights Reserved</p>
+    </div>
+  </footer>
+
+  <script>
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&@$";
+
+    // Hardware-driven scramble animation (never blocks CPU execution)
+    function scrambleText(element, finalText, duration = 600) {
+      if(!element) return;
+      let startTime = null;
+
+      function update(currentTime) {
+        if (!startTime) startTime = currentTime;
+        const progress = Math.min((currentTime - startTime) / duration, 1);
+        const revealedChars = Math.floor(progress * finalText.length);
+
+        element.innerText = finalText
+          .split("")
+          .map((letter, i) => {
+            if (letter === " ") return " ";
+            if (i < revealedChars) return finalText[i];
+            return characters[Math.floor(Math.random() * characters.length)];
+          })
+          .join("");
+
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        } else {
+          element.innerText = finalText;
+        }
+      }
+      requestAnimationFrame(update);
+    }
+
+    // Reliable loader dismisser
+    function hideLoader() {
+      const loader = document.getElementById("loader");
+      if (loader && !loader.classList.contains("hide")) {
+        loader.classList.add("hide");
+        
+        // Trigger remaining text scramble animations smoothly
+        document.querySelectorAll(".scramble-on-load").forEach(el => {
+          scrambleText(el, el.innerText, 600);
+        });
+      }
+    }
+
+    // Scramble initial loader screen text
+    document.addEventListener("DOMContentLoaded", () => {
+      const loaderText = document.getElementById("loaderText");
+      if (loaderText) scrambleText(loaderText, "KENXEO", 600);
+    });
+
+    // Dismiss loader when DOM is ready (Max delay fallback: 800ms)
+    window.addEventListener("load", () => {
+      setTimeout(hideLoader, 600);
+    });
+
+    // Guaranteed safety timeout (ensures screen dismisses even if assets hang)
+    setTimeout(hideLoader, 800);
+
+    function toggleTheme(){
+      document.body.classList.toggle('light');
+    }
+  </script>
+</body>
+</html>      flex-direction: column;
       justify-content: center;
       align-items: center;
       transition: opacity 0.3s ease, visibility 0.3s ease;
